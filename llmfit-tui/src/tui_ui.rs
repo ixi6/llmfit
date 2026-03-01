@@ -881,6 +881,36 @@ fn draw_detail(frame: &mut Frame, app: &App, area: Rect, tc: &ThemeColors) {
     ]);
 
     lines.push(Line::from(""));
+    // GGUF download sources
+    if !fit.model.gguf_sources.is_empty() {
+        lines.push(Line::from(Span::styled(
+            "  ── GGUF Downloads ──",
+            Style::default().fg(tc.accent),
+        )));
+        lines.push(Line::from(""));
+        for src in &fit.model.gguf_sources {
+            lines.push(Line::from(vec![
+                Span::styled(
+                    format!("  📦 {:<12}", src.provider),
+                    Style::default().fg(tc.info),
+                ),
+                Span::styled(
+                    format!("huggingface.co/{}", src.repo),
+                    Style::default().fg(tc.fg),
+                ),
+            ]));
+        }
+        lines.push(Line::from(""));
+        lines.push(Line::from(Span::styled(
+            format!(
+                "  Tip: llmfit download {} --quant {}",
+                fit.model.gguf_sources[0].repo, fit.best_quant
+            ),
+            Style::default().fg(tc.muted),
+        )));
+        lines.push(Line::from(""));
+    }
+
     if !fit.notes.is_empty() {
         lines.push(Line::from(Span::styled(
             "  ── Notes ──",
